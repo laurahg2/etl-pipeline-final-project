@@ -39,7 +39,8 @@ RUN apt-get update \
     graphviz \
     jq \
     vim \
-    lsb-release 2>&1
+    lsb-release 2>&1 \
+    psycopg2 
     #
     # [Optional] For local testing instead of cloud shell
     # Install Docker CE CLI.

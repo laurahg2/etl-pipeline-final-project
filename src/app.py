@@ -1,10 +1,10 @@
 import csv
-import psycopg2
-from dotenv import load_dotenv
+import psycopg2 as ps
 path = '/workspace/data/2021-02-23-isle-of-wight.csv'
 products_list = []
 customers_list = []
 orders_list = []
+
 
 def import_csv(cached_list):
     try:
@@ -26,17 +26,16 @@ new_list = []
 import_csv(new_list)
 for i in new_list:
     print(i)
-
+    
 
 def database_connection():
-    load_dotenv()
-    host = os.environ.get("host")
-    user = os.environ.get("user")
-    password = os.environ.get("passsword")
-    database = os.environ.get("database")
-    port = os.environ.get("port")
+    host = "localhost"
+    user = "root"
+    password = "password"
+    database = "team-5-project_devcontainer_postgres_1"
+    port = "8080"
 
-    connection = psycopg2.connect(
+    connection = ps.connect(
         user,
         password,
         host,
@@ -46,35 +45,35 @@ def database_connection():
     return connection
 
 
-def create_table():
-    connection = database_connection()
-    cursor = connection.cursor()
-    cursor.execute(
-        """CREATE TABLE IF NOT EXISTS `products` (
-            `product_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            `product_name` VARCHAR(150) NOT NULL,
-            `product_price` FLOAT NOT NULL
-            )
-        """)
-    cursor.execute(
-        """CREATE TABLE IF NOT EXISTS `customers` (
-            `customer_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            `customer_name` VARCHAR(150) NOT NULL,
-            `customer_surname` VARCHAR(150) NOT NULL
-            )
-        """)
-    cursor.execute(
-        """CREATE TABLE IF NOT EXISTS `orders` (
-            `orders_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            `order_date` VARCHAR(100) NOT NULL,
-            `customer_id` INT NOT NULL,
-            `product_id` INT NOT NULL,
-            `payment_total` FLOAT NOT NULL,
-            FOREIGN KEY(product_id) REFERENCES products(product_id),
-            FOREIGN KEY(customer_id) REFERENCES customers(customer_id)
-            )
-        """)
-    connection.commit()
+# def create_table():
+#     connection = database_connection()
+#     cursor = connection.cursor()
+#     cursor.execute(
+#         """CREATE TABLE IF NOT EXISTS `products` (
+#             `product_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+#             `product_name` VARCHAR(150) NOT NULL,
+#             `product_price` FLOAT NOT NULL
+#             )
+#         """)
+#     cursor.execute(
+#         """CREATE TABLE IF NOT EXISTS `customers` (
+#             `customer_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+#             `customer_name` VARCHAR(150) NOT NULL,
+#             `customer_surname` VARCHAR(150) NOT NULL
+#             )
+#         """)
+#     cursor.execute(
+#         """CREATE TABLE IF NOT EXISTS `orders` (
+#             `orders_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+#             `order_date` VARCHAR(100) NOT NULL,
+#             `customer_id` INT NOT NULL,
+#             `product_id` INT NOT NULL,
+#             `payment_total` FLOAT NOT NULL,
+#             FOREIGN KEY(product_id) REFERENCES products(product_id),
+#             FOREIGN KEY(customer_id) REFERENCES customers(customer_id)
+#             )
+#         """)
+#     connection.commit()
 
 
 # def add_products_to_database():
