@@ -1,4 +1,4 @@
-import csv
+from file_handlers import csv
 import psycopg2 as ps
 path = '/workspace/data/2021-02-23-isle-of-wight.csv'
 products_list = []
@@ -6,44 +6,40 @@ customers_list = []
 orders_list = []
 
 
-def import_csv(cached_list):
-    try:
-        with open(path) as file:
-            fieldnames = ['date', 'location', 'full_name', 'order', 'payment_type', 'total', 'card_details']
-            new_file = csv.DictReader(file, delimiter = ',', fieldnames=fieldnames)
-            for row in new_file:
-                date = str(row['date'])
-                location = str(row['location'])
-                order = str(row['order'])
-                total = float(row['total'])
-                cached_list.append({'date':date, 'location':location, 'order':order, 'total':total})
-            return cached_list
-    except Exception as e:
-        print('An error occurred: ' + str(e))
 
 
 new_list = []
-import_csv(new_list)
+csv.import_csv(new_list)
 for i in new_list:
     print(i)
     
 
-def database_connection():
-    host = "localhost"
-    user = "root"
-    password = "password"
-    database = "team-5-project_devcontainer_postgres_1"
-    port = "8080"
+# def database_connection():
+#     host = "localhost"
+#     user = "root"
+#     password = "password"
+#     database = "team-5-project_devcontainer_postgres_1"
+#     port = "8080"
 
-    connection = ps.connect(
-        user,
-        password,
-        host,
-        port,
-        database
-    )
-    return connection
+#     connection = ps.connect(
+#         user,
+#         password,
+#         host,
+#         port,
+#         database
+#     )
+#     print('we are connected to the database', connection)
+#     return connection
 
+
+
+# connection = ps.connect(
+#     host = "localhost",
+#     user = "root",
+#     password = "password",
+#     database = "team-5-project_devcontainer_postgres_1",
+#     port = 8080)
+# print('we are connected to the database', connection)
 
 # def create_table():
 #     connection = database_connection()
