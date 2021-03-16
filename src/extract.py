@@ -1,6 +1,3 @@
-<<<<<<< Updated upstream
-from app import new_list
-=======
 import connection
 
 def get_orders(orders_list):
@@ -11,7 +8,6 @@ def get_orders(orders_list):
                 product = value.split(",,")
                 raw_orders.append(product)
     return raw_orders
->>>>>>> Stashed changes
 
 
 raw_orders = []
@@ -22,40 +18,10 @@ for order in new_list:
             raw_orders.append(product)
 
 
-<<<<<<< Updated upstream
-clear_orders = []
-for items in raw_orders:
-    for lines in items:
-        if lines[0] == ",":
-            lines = lines[1:]
-    list_to_string = ''.join(lines).replace("Large,", "Large ").replace("Regular,", "Regular ")
-    clear_orders.append(list_to_string)
-
-
-list_of_dict = []
-for order in clear_orders:
-    #how many times "," appears, split that many times
-    list_to_string = ''.join(order)
-    number = list_to_string.count(",")
-    if number == 1:
-        product = order.split(",", number)
-        product_name = product[0]
-        product_price = product[1]
-        dictionary = {
-            "product_name": product_name,
-            "product_price": product_price
-        }
-        list_order = []
-        list_order.append(dictionary)
-        list_of_dict.append(list_order)
-
-    elif number > 1:
-=======
 def create_orders_dictionary(orders_list):
     for order in orders_list:
         list_to_string = ''.join(order)
         number = list_to_string.count(",")
->>>>>>> Stashed changes
         product = order.split(",", number)
         list_order = []
         n = 0
@@ -69,11 +35,6 @@ def create_orders_dictionary(orders_list):
             }
             list_order.append(dictionary)
         list_of_dict.append(list_order)
-<<<<<<< Updated upstream
-
-for order in list_of_dict:
-    print(order)
-=======
     return list_of_dict
 
 list_of_dict =[]
@@ -121,4 +82,3 @@ def split_product_size(orders_list):
 
 order_list = []
 connection.add_product_to_database(create_orders_dictionary, list_of_dict)
->>>>>>> Stashed changes

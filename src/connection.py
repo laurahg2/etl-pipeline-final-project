@@ -93,4 +93,3 @@ def add_transaction_to_database(new_list):
 
 def error_message():
     print("This input does not exist")
-
