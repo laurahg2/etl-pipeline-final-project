@@ -1,3 +1,5 @@
+import connection
+
 def get_orders(orders_list):
     raw_orders = []
     for order in orders_list:
@@ -20,7 +22,6 @@ def clear_orders(orders_list):
 
 
 def create_orders_dictionary(orders_list):
-    list_of_dict = []
     for order in orders_list:
         list_to_string = ''.join(order)
         number = list_to_string.count(",")
@@ -40,6 +41,9 @@ def create_orders_dictionary(orders_list):
     return list_of_dict
 
 
+list_of_dict =[]
+
+
 def extract_unique_names(orders_list):
     duplicates_removed = []
     for order in clear_orders:
@@ -56,6 +60,31 @@ def extract_unique_names(orders_list):
                 duplicates_removed.append(product_string)
     return duplicates_removed
 
+def split_product_size(orders_list):
+    for dictionary in orders_list:
+        for key, value in dictionary.items():
+            if key == "product_name":
+                convert_to_string = ''.join(value)
+                large = "Large "
+                regular = "Regular "
+                if large in convert_to_string:
+                    size = convert_to_string[:6]
+                    name = convert_to_string[6:]
+                    dictionary.update(
+                    {"product_size": size.strip(),
+                    "product_name": name}
+                    )
+                elif regular in convert_to_string:
+                    size = convert_to_string[:7]
+                    name = convert_to_string[7:]
+                    dictionary.update(
+                    {"product_size": size.strip(),
+                    "product_name": name}
+                    )
+    return orders_list
+
+order_list = []
+connection.add_product_to_database(create_orders_dictionary, list_of_dict)
 
 def split_product_size(orders_list):
     for dictionary in orders_list:
