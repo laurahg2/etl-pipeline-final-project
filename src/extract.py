@@ -10,12 +10,15 @@ def get_orders(orders_list):
     return raw_orders
 
 
-raw_orders = []
-for order in new_list:
-    for key, value in order.items():
-        if key == 'order':
-            product = value.split(",,")
-            raw_orders.append(product)
+def clear_orders(orders_list):
+    clear_orders = []
+    for items in orders_list:
+        for lines in items:
+            if lines[0] == ",":
+                lines = lines[1:]
+        list_to_string = ''.join(lines).replace("Large,", "Large ").replace("Regular,", "Regular ")
+        clear_orders.append(list_to_string)
+    return clear_orders
 
 
 def create_orders_dictionary(orders_list):
@@ -31,11 +34,12 @@ def create_orders_dictionary(orders_list):
             n += 2
             dictionary = {
             "product_name" : product_name,
-            "product_price" : product_price
-            }
+            "product_price" : product_price,
+            "product_size" : None}
             list_order.append(dictionary)
         list_of_dict.append(list_order)
     return list_of_dict
+
 
 list_of_dict =[]
 
@@ -55,7 +59,6 @@ def extract_unique_names(orders_list):
             if product_string not in duplicates_removed:
                 duplicates_removed.append(product_string)
     return duplicates_removed
-
 
 def split_product_size(orders_list):
     for dictionary in orders_list:
@@ -82,3 +85,26 @@ def split_product_size(orders_list):
 
 order_list = []
 connection.add_product_to_database(create_orders_dictionary, list_of_dict)
+
+def split_product_size(orders_list):
+    for dictionary in orders_list:
+        for key, value in dictionary.items():
+            if key == "product_name":
+                convert_to_string = ''.join(value)
+                large = "Large "
+                regular = "Regular "
+                if large in convert_to_string:
+                    size = convert_to_string[:6]
+                    name = convert_to_string[6:]
+                    dictionary.update(
+                    {"product_size": size.strip(),
+                    "product_name": name}
+                    )
+                elif regular in convert_to_string:
+                    size = convert_to_string[:7]
+                    name = convert_to_string[7:]
+                    dictionary.update(
+                    {"product_size": size.strip(),
+                    "product_name": name}
+                    )
+    return orders_list

@@ -39,8 +39,7 @@ RUN apt-get update \
     graphviz \
     jq \
     vim \
-    lsb-release 2>&1 \
-    psycopg2 
+    lsb-release 2>&1
     #
     # [Optional] For local testing instead of cloud shell
     # Install Docker CE CLI.
@@ -99,6 +98,9 @@ RUN apt-get install -y apt-utils groff
 RUN sudo apt-get update -y
 RUN sudo apt-get upgrade -y
 RUN sudo apt-get install python3-venv -y
+RUN sudo apt-get install python3-pip -y
+RUN pip3 install psycopg2-binary
+RUN pip3 install pytest
     #
     # Clean up
     #
