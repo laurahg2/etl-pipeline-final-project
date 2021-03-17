@@ -20,7 +20,7 @@ def create_table():
         """
         DO $$ BEGIN
         IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'sizes') THEN
-        CREATE TYPE sizes AS ENUM ('Small', 'Regular', 'Large');
+        CREATE TYPE sizes AS ENUM ('Standard', 'Small', 'Regular', 'Large');
         END IF;
         END $$
         """)
@@ -28,7 +28,7 @@ def create_table():
         """ 
         CREATE TABLE IF NOT EXISTS products (
             product_id SERIAL PRIMARY KEY NOT NULL,
-            product_size sizes,
+            product_size VARCHAR(20) NOT NULL,
             product_name VARCHAR(150) NOT NULL,
             product_price FLOAT NOT NULL
             )
@@ -67,17 +67,20 @@ def create_table():
     
     connection.commit()
     
-def add_product_to_database(create_orders_dictionary, list_of_dict):
+def add_product_to_database(new_list):
     with connection.cursor() as cursor:
-        
-        for values in list_of_dict:
-            for value in values:
-                new_value = value
-                sql = "INSERT INTO products (product_name, product_price) VALUES (%s, %s)"
-                val = (new_value["product_name"], new_value["product_price"])
-                print(val)
-                cursor.execute(sql, val)
-                connection.commit()
+        for order in new_list:
+            for key, value in order.items():
+                if key == "order":
+                    orders_list = value
+                    for v in orders_list:
+                        product_name = v["product_name"]
+                        product_price = v["product_price"]
+                        product_size = v["product_size"]
+                        sql = "INSERT INTO products (product_size, product_name, product_price) VALUES (%s, %s, %s)"
+                        val = (product_size, product_name, product_price)
+                        cursor.execute(sql, [val])
+                        connection.commit()
 
 def add_location_to_database(new_list):
     with connection.cursor() as cursor:
@@ -99,13 +102,13 @@ def add_transaction_to_database(new_list):
             cursor.execute(sql, val)
             connection.commit()
 
-def add_sizes_to_products(split_product_size, orders_list):
+def add_sizes_to_products(new_list):
     with connection.cursor() as cursor:
-        for values in orders_list:
+        for values in new_list:
             for value in values:
-                new_value = value
+                size = value["product_size"]
                 sql = "INSERT INTO products (product_size) VALUES (%s)"
-                val = (new_value["product_size"])
+                val = (size)
                 cursor.execute(sql, val)
                 connection.commit()
 
