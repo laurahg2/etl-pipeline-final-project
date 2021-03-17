@@ -10,15 +10,19 @@ def get_orders(orders_list):
     return raw_orders
 
 
-raw_orders = []
-for order in new_list:
-    for key, value in order.items():
-        if key == 'order':
-            product = value.split(",,")
-            raw_orders.append(product)
+def clear_orders(orders_list):
+    clear_orders = []
+    for items in orders_list:
+        for lines in items:
+            if lines[0] == ",":
+                lines = lines[1:]
+        list_to_string = ''.join(lines).replace("Large,", "Large ").replace("Regular,", "Regular ")
+        clear_orders.append(list_to_string)
+    return clear_orders
 
 
 def create_orders_dictionary(orders_list):
+    list_of_dict =[]
     for order in orders_list:
         list_to_string = ''.join(order)
         number = list_to_string.count(",")
@@ -37,7 +41,7 @@ def create_orders_dictionary(orders_list):
         list_of_dict.append(list_order)
     return list_of_dict
 
-list_of_dict =[]
+
 
 
 def extract_unique_names(orders_list):
@@ -58,6 +62,7 @@ def extract_unique_names(orders_list):
 
 
 def split_product_size(orders_list):
+    orders_list = []
     for dictionary in orders_list:
         for key, value in dictionary.items():
             if key == "product_name":
@@ -80,5 +85,6 @@ def split_product_size(orders_list):
                     )
     return orders_list
 
-order_list = []
+split_product = split_product_size()
 connection.add_product_to_database(create_orders_dictionary, list_of_dict)
+connection.add_sizes_to_products(split_product_size, orders_list)

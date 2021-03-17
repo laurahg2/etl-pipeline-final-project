@@ -14,10 +14,18 @@ connection = ps.connect(
 
 
 def create_table():
-    
+        
     cursor = connection.cursor()
     cursor.execute(
-        """CREATE TYPE sizes AS ENUM ('Small', 'Regular', 'Large');
+        """
+        DO $$ BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'sizes') THEN
+        CREATE TYPE sizes AS ENUM ('Small', 'Regular', 'Large');
+        END IF;
+        END $$
+        """)
+    cursor.execute(
+        """ 
         CREATE TABLE IF NOT EXISTS products (
             product_id SERIAL PRIMARY KEY NOT NULL,
             product_size sizes,
@@ -34,10 +42,10 @@ def create_table():
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS transaction (
             transaction_id SERIAL PRIMARY KEY NOT NULL,
-            transaction_date TIMESTAMP(100) NOT NULL,
-            transaction_time VARCHAR(100) NOT NULL,
+            transaction_date TIMESTAMP(100),
+            transaction_time VARCHAR(100),
             location_id INT,
-            transaction_total FLOAT NOT NULL,
+            transaction_total FLOAT,
             CONSTRAINT fk_location FOREIGN KEY(location_id) REFERENCES location(location_id)
             )
         """)
@@ -65,8 +73,9 @@ def add_product_to_database(create_orders_dictionary, list_of_dict):
         for values in list_of_dict:
             for value in values:
                 new_value = value
-                sql = "INSERT INTO products (product_name, product_price, product_size) VALUES (%s, %s, %s)"
-                val = (new_value["product_name"], new_value["product_price"], new_value["product_size"])
+                sql = "INSERT INTO products (product_name, product_price) VALUES (%s, %s)"
+                val = (new_value["product_name"], new_value["product_price"])
+                print(val)
                 cursor.execute(sql, val)
                 connection.commit()
 
@@ -90,6 +99,15 @@ def add_transaction_to_database(new_list):
             cursor.execute(sql, val)
             connection.commit()
 
+def add_sizes_to_products(split_product_size, orders_list):
+    with connection.cursor() as cursor:
+        for values in orders_list:
+            for value in values:
+                new_value = value
+                sql = "INSERT INTO products (product_size) VALUES (%s)"
+                val = (new_value["product_size"])
+                cursor.execute(sql, val)
+                connection.commit()
 
 def error_message():
     print("This input does not exist")
