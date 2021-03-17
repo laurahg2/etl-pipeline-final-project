@@ -72,4 +72,3 @@ def extract_unique_names(orders_list):
             if product_string not in duplicates_removed:
                 duplicates_removed.append(product_string)
     return duplicates_removed
-
