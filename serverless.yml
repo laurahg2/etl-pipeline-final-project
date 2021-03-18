@@ -27,10 +27,11 @@ provider:
   name: aws
   runtime: python3.8
   lambdaHashingVersion: 20201221
-
+  iam:
+    role: arn:aws:iam::505617246107:role/team-5-execution-role
 # you can overwrite defaults here
 #  stage: dev
-#  region: us-east-1
+  region: eu-west-1 
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
@@ -63,7 +64,7 @@ provider:
 
 functions:
   team5:
-    handler: src/team5/handler.start
+    handler: src/Team-05/handler.hello
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
