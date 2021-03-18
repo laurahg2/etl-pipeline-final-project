@@ -13,6 +13,7 @@ def clear_orders(orders_list):
                 if ",," in products:
                     products = products.replace(",,", ",")
         order['order'] = products
+    return orders_list
 
 
 def create_orders_dictionary(orders_list):
@@ -55,6 +56,7 @@ def create_orders_dictionary(orders_list):
                         }
                     list_order.append(dictionary)
         order['order'] = list_order
+    return orders_list
 
 
 def extract_unique_names(orders_list):
