@@ -4,7 +4,7 @@ import psycopg2 as ps
 
 
 connection = ps.connect(
-    host = "172.20.0.3",
+    host = "172.20.0.2",
     user = "root",
     password = "password",
     database = "template1",
@@ -58,12 +58,6 @@ def create_table():
             CONSTRAINT fk_transaction FOREIGN KEY(transaction_id) REFERENCES transaction(transaction_id)
             )
         """)
-    # cursor.execute(
-    #     """SELECT SUM(transaction_total)
-    #         FROM transaction
-    #         WHERE transaction_id = product_price;
-    #     """
-    # )
     
     connection.commit()
     
@@ -109,7 +103,7 @@ def add_location_to_database(new_list):
 
 def add_transaction_to_database(new_list):
     with connection.cursor() as cursor:
-        transaction_list = list({'date':order['date'], 'time':order['time'], 'location':order['location']} for order in new_list)
+        transaction_list = list({'date':order['date'], 'time':order['time'], 'location':order['location'], 'total':order['total']} for order in new_list)
         locations_id = {}
         cursor.execute("SELECT * FROM location")
         row = cursor.fetchall()
@@ -135,21 +129,82 @@ def add_transaction_to_database(new_list):
             location = v['location']
             time = v['time']
             date = v['date']
-            sql = "INSERT INTO transaction (location_id, transaction_date, transaction_time) VALUES (%s, %s, %s)"
-            val = ( location, date, time )
+            total = v['total']
+            sql = "INSERT INTO transaction (location_id, transaction_date, transaction_time, transaction_total) VALUES (%s, %s, %s, %s)"
+            val = ( location, date, time, total )
             cursor.execute(sql, val)
             connection.commit()
             
             # "FROM location(location_id) INSERT INTO transaction(location_id)"
 
-def add_basket_to_database(new_list):
-    with connection.cursor() as cursor:
+# def add_basket_to_database(new_list):
+#     with connection.cursor() as cursor:
+#         products_list = list(set((products['product_name'], products['product_price'], products['product_size']) for order_dict in new_list for products in order_dict['order']))
+#         transactions_list = list({'transaction_id':transaction['transaction_id']} for index, transaction in enumerate(new_list, start=1))
+#         basket = {}
+#         for transaction in transactions_list:
+#             print(transaction)
+#             for product in products_list:
+#                 print(product)
+#                 if product in transactions_list['transaction_id']:
+#                     id = transaction
+#                     pro = product
+#                     basket['transaction_id'] = id
+#                     basket['product_id'] = pro
+#         print(basket)
         
-        cursor.execute("""SELECT products.product_id, transaction.transaction_id 
-                       FROM products, transaction 
-                       """)
-        row = cursor.fetchall()
-        print(row)
+        # for b in basket:
+        # sql = ("""SELECT products.product_id, transaction.transaction_id 
+        #                FROM products, transaction""")
+        # val = ()
+        # products = cursor.fethall()
+        
+        
+        # for transaction in enumerate(new_list)
+        
+        # for product in products:
+        #     print(product)
+            
+        # cursor.execute("SELECT transaction_id FROM transaction")
+        # transactions = cursor.fethall()
+        
+        # for transaction in transactions:
+        #     print(transaction)
+        
+def fetch_products_data():
+    temp_list =[]
+    with connection.cursor() as cursor:
+        postresql = "SELECT * FROM products"
+        cursor.execute(postresql)
+        rows = cursor.fetchall()
+        for row in rows:
+            temp_dict = {'product_id': int, 'product_name': str}
+            temp_dict['product_id'] = row[0]
+            temp_dict['product_name'] = row[1]
+            temp_list.append(temp_dict)
+    return temp_list
+
+def load_into_basket_table_and_update_local_ids(new_list):
+    temp_list = fetch_products_data()
+    with connection.cursor() as cursor:
+        for dictionary in new_list:
+            for temp_dict in temp_list:
+                postgresql_2 = "SELECT transaction_id FROM transaction WHERE transaction_id = (SELECT max(transaction_id) FROM transaction)"
+                cursor.execute(postgresql_2)
+                row = cursor.fetchone()
+                dictionary['id'] = row[0]
+    
+
+def load_into_products_in_basket_table(new_list):
+    temp_list = fetch_products_data()
+    with connection.cursor() as cursor:
+        for dictionary in new_list:
+            for temp_dict in temp_list:
+                if dictionary['id'] == temp_dict['product_name']:
+                    postgresql = "INSERT INTO basket (transaction_id, product_id) VALUES ('{}', '{}')".format((dictionary['id']), temp_dict['product_id'])
+                    cursor.execute(postgresql)
+                    connection.commit()
+
 
 
 def error_message():
