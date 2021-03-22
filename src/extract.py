@@ -7,6 +7,7 @@ def get_to_products(orders_list: list):
     return products
 
 
+
 def clear_orders(orders_list: list):
     products = get_to_products(orders_list)
     if products[0] == ",":
@@ -19,8 +20,9 @@ def clear_orders(orders_list: list):
         products = products.replace(",,", ",")
     for order in orders_list:
         order['order'] = products
-
+        
     return orders_list
+
 
 
 def create_orders_dictionary(orders_list: list):
