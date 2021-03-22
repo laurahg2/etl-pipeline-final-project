@@ -56,13 +56,13 @@ functions:
             - suffix: .csv
 
 # you can add CloudFormation resource templates here
-resources:
- Resources:
-   NewResource:
-     Type: AWS::S3::Bucket
-     DeletionPolicy: Retain
-     Properties:
-       BucketName: team5-final-project
+# resources:
+#  Resources:
+#    NewResource:
+#      Type: AWS::S3::Bucket
+#      DeletionPolicy: Retain
+#      Properties:
+#        BucketName: team5-final-project
 #  Outputs:
 #     NewOutput:
 #       Description: "Description for the output"
@@ -70,11 +70,11 @@ resources:
 
 
 # you can add statements to the Lambda function's IAM Role here
- iamRoleStatements:
-   - Effect: "Allow"
-     Action:
-       - s3:GetObject
-       - s3:ListBucket
+#  iamRoleStatements:
+#    - Effect: "Allow"
+#      Action:
+#        - s3:GetObject
+#        - s3:ListBucket
       
 #      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
 #    - Effect: "Allow"
