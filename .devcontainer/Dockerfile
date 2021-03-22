@@ -111,6 +111,9 @@ RUN apt-get autoremove -y \
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
 
+RUN sudo apt-get update
+RUN sudo apt-get upgrade -y
 RUN curl -fsSL https://deb.nodesource.com/setup_14.x | bash -
 RUN sudo apt-get install -y nodejs
+RUN npm install aws-sso-credentials-getter
 RUN npm i
