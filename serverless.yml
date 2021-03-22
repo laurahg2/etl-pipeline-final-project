@@ -33,11 +33,49 @@ provider:
 #  stage: dev
   region: eu-west-1 
 
+# you can add packaging information here
+package:
+ include:
+   - src/**
+ exclude:
+   - "*"
+   - "*/**"
+
+functions:
+  team5:
+    handler: src/handler.handle
+    timeout: 300
+    # layers:
+    #   - !Ref PythonRequirementsLambdaLayer
+    events:
+      - s3:
+          bucket: team5-final-project
+          event: s3:ObjectCreated:*
+          existing: true
+          rules:
+            - suffix: .csv
+
+# you can add CloudFormation resource templates here
+resources:
+ Resources:
+   NewResource:
+     Type: AWS::S3::Bucket
+     DeletionPolicy: Retain
+     Properties:
+       BucketName: team5-final-project
+#  Outputs:
+#     NewOutput:
+#       Description: "Description for the output"
+#       Value: "Some output value"
+
+
 # you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
+ iamRoleStatements:
+   - Effect: "Allow"
+     Action:
+       - s3:GetObject
+       - s3:ListBucket
+      
 #      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
 #    - Effect: "Allow"
 #      Action:
@@ -53,17 +91,8 @@ provider:
 #  environment:
 #    variable1: value1
 
-# you can add packaging information here
-package:
- include:
-   - src/**
- exclude:
-   - "*"
-   - "*/**"
 
-functions:
-  team5:
-    handler: src/handler.handle
+    
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
@@ -103,15 +132,3 @@ functions:
 #    Define function environment variables here
 #    environment:
 #      variable2: value2
-
-# you can add CloudFormation resource templates here
-#resources:
-#  Resources:
-#    NewResource:
-#      Type: AWS::S3::Bucket
-#      Properties:
-#        BucketName: my-new-bucket
-#  Outputs:
-#     NewOutput:
-#       Description: "Description for the output"
-#       Value: "Some output value"
