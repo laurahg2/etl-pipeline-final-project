@@ -1,0 +1,27 @@
+{
+  "name": "workspace",
+  "version": "1.0.0",
+  "description": "In our README document we will express the following:\r # Values Alignment\r ## How are you going to balance rest with work?\r -\tBy taking regular breaks\r -\tTry to rest on the weekends\r -\tStay after the work day is done to avoid working on weekends\r -\tSelf care (different for everyone)",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "deploy": "serverless deploy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/generation-DELON02/team-5-project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/generation-DELON02/team-5-project/issues"
+  },
+  "homepage": "https://github.com/generation-DELON02/team-5-project#readme",
+  "dependencies": {
+    "aws-sso-credentials-getter": "^1.2.2",
+    "moment": "^2.29.1",
+    "serverless": "^2.30.1"
+  }
+}
