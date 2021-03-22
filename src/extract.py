@@ -17,6 +17,7 @@ def clear_orders(orders_list):
 
 
 def create_orders_dictionary(orders_list):
+    list_of_dict =[]
     for order in orders_list:
         for key, value in order.items():
             if key == 'order':
@@ -52,7 +53,7 @@ def create_orders_dictionary(orders_list):
                         dictionary = {
                             "product_name": product_name,
                             "product_price": product_price,
-                            "product_size": "Standard"
+                            "product_size": "Regular"
                         }
                     list_order.append(dictionary)
         order['order'] = list_order
