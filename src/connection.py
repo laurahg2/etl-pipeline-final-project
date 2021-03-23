@@ -74,10 +74,10 @@ def add_product_to_database(new_list):
             val = (product_size, product_name, product_price)
             cursor.execute(sql, val)
             connection.commit()
-            id = cursor.fetchall()
-            print(id)
-            v['product_id'] = id[0]
-        return newest_list
+        #     id = cursor.fetchall()
+        #     print(id)
+        #     v['product_id'] = id[0]
+        # return newest_list
 
 def add_location_to_database(new_list):
     with connection.cursor() as cursor:
@@ -122,11 +122,10 @@ def add_transaction_to_database(new_list):
             val = ( location, date, time, total )
             cursor.execute(sql, val)
             connection.commit()
-
-        #     id = cursor.fetchall()
-        #     print(id)
-        #     v['transaction_id'] = id[0][0]
-        # return new_list
+            id = cursor.fetchall()
+            print(id)
+            v['transaction_id'] = id[0][0]
+        return new_list
 
 
 
