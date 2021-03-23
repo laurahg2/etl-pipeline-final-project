@@ -122,11 +122,12 @@ def add_transaction_to_database(new_list):
             val = ( location, date, time, total )
             cursor.execute(sql, val)
             connection.commit()
+
         #     id = cursor.fetchall()
         #     print(id)
         #     v['transaction_id'] = id[0][0]
         # return new_list
-            
+
 
 
 def get_product_by_name(name):

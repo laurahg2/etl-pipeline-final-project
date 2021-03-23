@@ -1,11 +1,12 @@
-from src.file_handlers import csv
-from src import extract
-from src import connection
+from file_handlers import csv
+import extract
+import connection
 
 path = '/workspace/data/2021-02-23-isle-of-wight.csv'
 
 new_list = []
 csv.import_csv(new_list)
+
 
 
 connection.create_table()                
@@ -18,3 +19,4 @@ if __name__ == "__main__":
     extract.clear_orders(new_list)
     extract.create_orders_dictionary(new_list)
     # extract.extract_unique_names(new_list)
+
