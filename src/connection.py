@@ -4,7 +4,7 @@ import psycopg2 as ps
 
 
 connection = ps.connect(
-    host = "172.20.0.3",
+    host = "172.20.0.3", # Change this to your container IP address by running 'docker inspect team-5-project_devcontainer_postgres_1'
     user = "root",
     password = "password",
     database = "template1",
@@ -122,11 +122,12 @@ def add_transaction_to_database(new_list):
             val = ( location, date, time, total )
             cursor.execute(sql, val)
             connection.commit()
-            id = cursor.fetchall()
-            print(id)
-            v['transaction_id'] = id[0][0]
-        return new_list
-            
+
+        #     id = cursor.fetchall()
+        #     print(id)
+        #     v['transaction_id'] = id[0][0]
+        # return new_list
+
 
 
 def get_product_by_name(name):

@@ -101,6 +101,13 @@ RUN sudo apt-get install python3-venv -y
 RUN sudo apt-get install python3-pip -y
 RUN pip3 install psycopg2-binary
 RUN pip3 install pytest
+RUN pip3 install python-dotenv
+RUN pip3 install boto3
+RUN pip3 install jmespath
+RUN pip3 install python-dateutil
+RUN pip3 install s3transfer
+RUN pip3 install six
+RUN pip3 install urllib3
     #
     # Clean up
     #
