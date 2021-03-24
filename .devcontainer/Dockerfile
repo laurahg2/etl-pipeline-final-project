@@ -124,3 +124,5 @@ RUN curl -fsSL https://deb.nodesource.com/setup_14.x | bash -
 RUN sudo apt-get install -y nodejs
 RUN npm install aws-sso-credentials-getter
 RUN npm i
+RUN npm install plugins serverless-python-requirements
+RUN npm install plugins serverless-iam-roles-per-function
