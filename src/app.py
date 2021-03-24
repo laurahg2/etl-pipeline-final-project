@@ -1,22 +1,22 @@
-from file_handlers import csv
-import extract
-import connection
+import src.extract as extract 
+import src.transform as transform
+import src.load as load
 
 path = '/workspace/data/2021-02-23-isle-of-wight.csv'
 
 new_list = []
-csv.import_csv(new_list)
+extract.import_csv(new_list)
 
 
 
-connection.create_table()                
-connection.add_product_to_database(new_list)
-connection.add_location_to_database(new_list)
-connection.add_transaction_to_database(new_list)
-connection.add_basket_to_database(new_list)
+load.create_table()                
+load.add_product_to_database(new_list)
+load.add_location_to_database(new_list)
+load.add_transaction_to_database(new_list)
+load.add_basket_to_database(new_list)
 
 if __name__ == "__main__":
-    extract.clear_orders(new_list)
-    extract.create_orders_dictionary(new_list)
+    transform.clear_orders(new_list)
+    transform.create_orders_dictionary(new_list)
     # extract.extract_unique_names(new_list)
 

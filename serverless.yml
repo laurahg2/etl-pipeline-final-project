@@ -16,6 +16,16 @@ service: team5
 #app: your-app-name
 #org: your-org-name
 
+plugins:
+  - serverless-python-requirements
+  - serverless-iam-roles-per-function
+
+custom:
+  pythonRequirements:
+    slim: true
+    layer: true
+    dockerizePip: non-linux
+
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
 frameworkVersion: '2'
@@ -27,19 +37,20 @@ provider:
   name: aws
   runtime: python3.8
   lambdaHashingVersion: 20201221
+# you can overwrite defaults here
+  stage: dev
+  region: eu-west-1 
   iam:
     role: arn:aws:iam::505617246107:role/team-5-execution-role
-# you can overwrite defaults here
-#  stage: dev
-  region: eu-west-1 
-
 # you can add packaging information here
 package:
- include:
-   - src/**
- exclude:
-   - "*"
-   - "*/**"
+  individually: false
+  include:
+    - src/**
+    - requirements.txt
+  exclude:
+    - "*"
+    - "*/**"
 
 functions:
   team5:
@@ -56,13 +67,12 @@ functions:
             - suffix: .csv
 
 # you can add CloudFormation resource templates here
-# resources:
-#  Resources:
-#    NewResource:
-#      Type: AWS::S3::Bucket
-#      DeletionPolicy: Retain
-#      Properties:
-#        BucketName: team5-final-project
+resources:
+  Resources:
+    IamRoleCustomResourcesLambdaExecution:
+      Type: AWS::IAM::Role
+      Properties:
+        PermissionsBoundary: arn:aws:iam::505617246107:policy/ScopePermissions
 #  Outputs:
 #     NewOutput:
 #       Description: "Description for the output"
