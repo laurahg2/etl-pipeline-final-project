@@ -7,7 +7,7 @@ def start_app(data):
     # new_list = []
     # ext(new_list, data)
     trsform(data)
-    # ld(new_list)
+    ld(new_list)
     # print(data)
     
 

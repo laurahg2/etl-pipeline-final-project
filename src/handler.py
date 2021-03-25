@@ -1,8 +1,24 @@
 import boto3
 import src.app as app
 import csv
+import psycopg2 as ps
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+dbname = os.environ["DB"]
+host = os.environ["HOST"]
+port = os.environ["PORT"]
+user = os.environ["DB_USER"]
+password = os.environ["PASSWORD"]
+
 
 def handle(event, context):
+    connection = ps.connect(dbname, host, port, user, password)
+    print(con)
+    cursor = con.cursor()
+    cursor.execute("SELECT 1", ())
+    print(cursor.fetchall())
     # Get key and bucket informaition
     key = event['Records'][0]['s3']['object']['key']
     bucket = event['Records'][0]['s3']['bucket']['name']

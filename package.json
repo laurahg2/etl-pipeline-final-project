@@ -24,6 +24,7 @@
     "moment": "^2.29.1",
     "plugins": "^0.4.2",
     "serverless": "^2.30.1",
+    "serverless-dotenv-plugin": "^3.9.0",
     "serverless-iam-roles-per-function": "^3.1.0",
     "serverless-python-requirements": "^5.1.0"
   }

@@ -19,6 +19,7 @@ service: team5
 plugins:
   - serverless-python-requirements
   - serverless-iam-roles-per-function
+  - serverless-dotenv-plugin
 
 custom:
   pythonRequirements:
@@ -42,7 +43,12 @@ provider:
   region: eu-west-1 
   iam:
     role: arn:aws:iam::505617246107:role/team-5-execution-role
-# you can add packaging information here
+  vpc:
+    securityGroupIds:
+      - sg-08915876469706265
+    subnetIds:
+      - subnet-0abef5f20cc40db46
+
 package:
   individually: false
   include:
@@ -55,7 +61,7 @@ package:
 functions:
   team5:
     handler: src/handler.handle
-    timeout: 300
+    timeout: 10
     layers:
       - !Ref PythonRequirementsLambdaLayer
     events:
@@ -65,6 +71,14 @@ functions:
           existing: true
           rules:
             - suffix: .csv
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - s3:GetObject
+          - s3:ListBucket
+        Resource:
+          - arn:aws:s3:::my-bucket
+          - arn:aws:s3:::my-bucket/*
 
 # you can add CloudFormation resource templates here
 resources:
@@ -78,13 +92,8 @@ resources:
 #       Description: "Description for the output"
 #       Value: "Some output value"
 
-
 # you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - s3:GetObject
-#        - s3:ListBucket
+
       
 #      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
 #    - Effect: "Allow"
