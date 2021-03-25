@@ -1,22 +1,24 @@
 import psycopg2 as ps
 from dotenv import load_dotenv
 
+load_dotenv()
+dbname = os.environ["DB"]
+host = os.environ["HOST"]
+port = os.environ["PORT"]
+user = os.environ["DB_USER"]
+password = os.environ["PASSWORD"]
 
-
-
-
-connection = ps.connect(
-    host = "172.18.0.2", # Change this to your container IP address by running 'docker inspect team-5-project_devcontainer_postgres_1'
-    user = "root",
-    password = "password",
-    database = "template1",
-    port = "5432"
-)
-
+connection = ps.connect(dbname, host, port, user, password)
+# connection = ps.connect(
+#     dbname = os.environ["DB"]
+#     host = os.environ["HOST"]
+#     port = os.environ["PORT"]
+#     user = os.environ["DB_USER"]
+#     password = os.environ["PASSWORD"]
+# )
 
 
 def create_table():
-        
     cursor = connection.cursor()
     cursor.execute(
         """

@@ -126,3 +126,4 @@ RUN npm install aws-sso-credentials-getter
 RUN npm i
 RUN npm install plugins serverless-python-requirements
 RUN npm install plugins serverless-iam-roles-per-function
+RUN npm install plugins serverless-dotenv-plugin
