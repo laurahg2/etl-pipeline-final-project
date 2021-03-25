@@ -1,55 +1,60 @@
-
-def get_to_products(orders_list: list):
+def clear_orders(orders_list):
     for order in orders_list:
         for key, value in order.items():
             if key == 'order':
                 products = value
-    return products
-
-
-
-def clear_orders(orders_list: list):
-    products = get_to_products(orders_list)
-    if products[0] == ",":
-        products = products[1:]
-    if "Large," in products:
-        products = products.replace("Large,", "Large-")
-    if "Regular," in products:
-        products = products.replace("Regular,", "Regular-")
-    if ",," in products:
-        products = products.replace(",,", ",")
-    for order in orders_list:
+                if products[0] == ",":
+                    products = products[1:]
+                if "Large," in products:
+                    products = products.replace("Large,", "Large-")
+                if "Regular," in products:
+                    products = products.replace("Regular,", "Regular-")
+                if ",," in products:
+                    products = products.replace(",,", ",")
         order['order'] = products
-        
     return orders_list
 
 
-
-def create_orders_dictionary(orders_list: list):
-    products = get_to_products(orders_list)
-    count_commas = products.count(",")
-    product_string = products.split(",", count_commas)
-    list_order = []
-    n = 0
-    while n in range(count_commas):
-        product_name = product_string[n]
-        product_price = product_string[n+1]
-        n += 2
-        if "Large-" in product_name:
-            product_size = product_name[:5]
-            product_name = product_name[6:]
-        elif "Regular-" in product_name:
-            product_size = product_name[:7]
-            product_name = product_name[8:]
-        else:
-            product_size = "Standard"
-        dictionary = {
-                "product_name": product_name,
-                "product_size": product_size,
-                "product_price": product_price
-            }
-        list_order.append(dictionary)
+def create_orders_dictionary(orders_list):
+    list_of_dict =[]
     for order in orders_list:
+        for key, value in order.items():
+            if key == 'order':
+                list_order = []
+                products = value
+                number = products.count(",")
+                product_data = products.split(",", number)
+                n = 0
+                while n in range(number):
+                    product_name = product_data[n]
+                    product_price = product_data[n+1]
+                    n += 2
+
+                    if "Large-" in product_name:
+                        size = product_name[:5]
+                        name = product_name[6:]
+                        dictionary = {
+                            "product_name": name,
+                            "product_price": product_price,
+                            "product_size": size
+                        }
+
+                    elif "Regular-" in product_name:
+                        size = product_name[:7]
+                        name = product_name[8:]
+                        dictionary = {
+                            "product_name": name,
+                            "product_price": product_price,
+                            "product_size": size
+                        }
+
+                    else:
+                        dictionary = {
+                            "product_name": product_name,
+                            "product_price": product_price,
+                            "product_size": "Regular"
+                        }
+                    list_order.append(dictionary)
         order['order'] = list_order
     return orders_list
 
@@ -58,10 +63,10 @@ def create_orders_dictionary(orders_list: list):
 #     duplicates_removed = []
 #     for order in clear_orders:
 #         list_to_string = ''.join(order)
-#         count_commas = list_to_string.count(",")
-#         product = order.split(",", count_commas)
+#         number = list_to_string.count(",")
+#         product = order.split(",", number)
 #         n = 0
-#         while n in range(count_commas):
+#         while n in range(number):
 #             name = product[n]
 #             price = product[n+1]
 #             n += 2
