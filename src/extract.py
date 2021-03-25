@@ -1,15 +1,14 @@
 import csv
-path = '/workspace/data/2021-02-23-isle-of-wight.csv'
-from datetime import datetime
+# path = '/workspace/data/2021-02-23-isle-of-wight.csv'
 
-def import_csv(cached_list, file):
+def read_csv(cached_list, file):
     try:
         # with open(path) as file:
             fieldnames = ['date', 'location', 'full_name', 'order', 'payment_type', 'total', 'card_details']
             new_file = csv.DictReader(file, delimiter = ',', fieldnames=fieldnames)
             for row in new_file:
-                date = (row['date'][0:10])
-                time = (row['date'][-8:])
+                date = str(row['date'][0:10])
+                time = str(row['date'][-8:])
                 location = str(row['location'])
                 order = str(row['order'])
                 total = float(row['total'])

@@ -1,10 +1,12 @@
 import psycopg2 as ps
+from dotenv import load_dotenv
+
 
 
 
 
 connection = ps.connect(
-    host = "172.20.0.3", # Change this to your container IP address by running 'docker inspect team-5-project_devcontainer_postgres_1'
+    host = "172.18.0.2", # Change this to your container IP address by running 'docker inspect team-5-project_devcontainer_postgres_1'
     user = "root",
     password = "password",
     database = "template1",
@@ -42,8 +44,8 @@ def create_table():
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS transaction (
             transaction_id SERIAL PRIMARY KEY NOT NULL,
-            transaction_date VARCHAR(100),
-            transaction_time VARCHAR(100),
+            transaction_date DATE,
+            transaction_time TIME(100),
             location_id INT,
             transaction_total FLOAT,
             CONSTRAINT fk_location FOREIGN KEY(location_id) REFERENCES location(location_id)
@@ -51,21 +53,17 @@ def create_table():
         """)
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS basket (
-            basket_id SERIAL PRIMARY KEY NOT NULL,
-            product_id INT,
             transaction_id INT,
+            product_id INT,
             CONSTRAINT fk_products FOREIGN KEY(product_id) REFERENCES products(product_id),
             CONSTRAINT fk_transaction FOREIGN KEY(transaction_id) REFERENCES transaction(transaction_id)
             )
         """)
-    
     connection.commit()
 
-                        
 def add_product_to_database(new_list):
     with connection.cursor() as cursor:
         newest_list = list(set((products['product_name'], products['product_price'], products['product_size']) for order_dict in new_list for products in order_dict['order']))
-
         for v in newest_list:
             product_name = v[0]
             product_price = v[1]
@@ -82,7 +80,6 @@ def add_product_to_database(new_list):
 def add_location_to_database(new_list):
     with connection.cursor() as cursor:
         newest_list = list(set((item['location']) for item in new_list))
-        
         for v in newest_list:
             location_name = v
             sql = ("INSERT INTO location (location_name) VALUES (%s)")
