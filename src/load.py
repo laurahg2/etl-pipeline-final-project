@@ -1,21 +1,20 @@
-import psycopg2 as ps
-from dotenv import load_dotenv
+# import psycopg2 as ps
+# from dotenv import load_dotenv
+# import os
+from src.handler import connection
+# load_dotenv()
+# dbname = os.environ["db"]
+# host = os.environ["host"]
+# port = os.environ["port"]
+# user = os.environ["user"]
+# password = os.environ["pass"]
 
-load_dotenv()
-dbname = os.environ["DB"]
-host = os.environ["HOST"]
-port = os.environ["PORT"]
-user = os.environ["DB_USER"]
-password = os.environ["PASSWORD"]
+# connection = ps.connect(dbname=dbname, 
+#                             host=host,
+#                             port=port, 
+#                             user=user, 
+#                             password=password)
 
-connection = ps.connect(dbname, host, port, user, password)
-# connection = ps.connect(
-#     dbname = os.environ["DB"]
-#     host = os.environ["HOST"]
-#     port = os.environ["PORT"]
-#     user = os.environ["DB_USER"]
-#     password = os.environ["PASSWORD"]
-# )
 
 
 def create_table():
@@ -29,9 +28,8 @@ def create_table():
         END $$
         """)
     cursor.execute(
-        """ 
-        CREATE TABLE IF NOT EXISTS products (
-            product_id SERIAL PRIMARY KEY NOT NULL,
+        """ CREATE TABLE IF NOT EXISTS products (
+            product_id INT IDENTITY(0,1) PRIMARY KEY NOT NULL,
             product_size sizes,
             product_name VARCHAR(150) NOT NULL,
             product_price FLOAT NOT NULL
@@ -39,13 +37,13 @@ def create_table():
         """)
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS location(
-            location_id SERIAL PRIMARY KEY NOT NULL,
+            location_id INT IDENTITY(0,1) PRIMARY KEY NOT NULL,
             location_name VARCHAR(150) NOT NULL
             )
         """)
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS transaction (
-            transaction_id SERIAL PRIMARY KEY NOT NULL,
+            transaction_id INT IDENTITY(0,1) PRIMARY KEY NOT NULL,
             transaction_date DATE,
             transaction_time TIME(100),
             location_id INT,

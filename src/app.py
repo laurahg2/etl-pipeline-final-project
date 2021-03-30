@@ -1,13 +1,13 @@
 # import src.extract as extract 
 import src.transform as transform
-# import src.load as load
+import src.load as load
 
 def start_app(data):
     # setup_db function first
     # new_list = []
     # ext(new_list, data)
     trsform(data)
-    ld(new_list)
+    ld(data)
     # print(data)
     
 
@@ -25,9 +25,9 @@ def trsform(new_list):
     second = transform.create_orders_dictionary(first)
     return second
 
-# def ld(new_list):
-#     load.create_table()                
-#     load.add_product_to_database(new_list)
-#     load.add_location_to_database(new_list)
-#     load.add_transaction_to_database(new_list)
-#     load.add_basket_to_database(new_list)
+def ld(new_list):
+    load.create_table()                
+    load.add_product_to_database(new_list)
+    load.add_location_to_database(new_list)
+    load.add_transaction_to_database(new_list)
+    load.add_basket_to_database(new_list)

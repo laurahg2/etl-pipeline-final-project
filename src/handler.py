@@ -6,17 +6,21 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-dbname = os.environ["DB"]
-host = os.environ["HOST"]
-port = os.environ["PORT"]
-user = os.environ["DB_USER"]
-password = os.environ["PASSWORD"]
+dbname = os.environ["db"]
+host = os.environ["host"]
+port = os.environ["port"]
+user = os.environ["user"]
+password = os.environ["pass"]
 
+connection = ps.connect(dbname=dbname, 
+                            host=host,
+                            port=port, 
+                            user=user, 
+                            password=password)
 
 def handle(event, context):
-    connection = ps.connect(dbname, host, port, user, password)
-    print(con)
-    cursor = con.cursor()
+    
+    cursor = connection.cursor()
     cursor.execute("SELECT 1", ())
     print(cursor.fetchall())
     # Get key and bucket informaition
