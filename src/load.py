@@ -1,7 +1,8 @@
-# import psycopg2 as ps
+import psycopg2 as ps
 # from dotenv import load_dotenv
 # import os
 from src.handler import connection
+from uuid import uuid4
 # load_dotenv()
 # dbname = os.environ["db"]
 # host = os.environ["host"]
@@ -19,18 +20,18 @@ from src.handler import connection
 
 def create_table():
     cursor = connection.cursor()
-    cursor.execute(
-        """
-        DO $$ BEGIN
-        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'sizes') THEN
-        CREATE TYPE sizes AS ENUM ('Small', 'Regular', 'Large');
-        END IF;
-        END $$
-        """)
+    # cursor.execute(
+    #     """
+    #     DO $$ BEGIN
+    #     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'sizes') THEN
+    #     CREATE TYPE sizes AS ENUM ('Small', 'Regular', 'Large');
+    #     END IF;
+    #     END $$
+    #     """)
     cursor.execute(
         """ CREATE TABLE IF NOT EXISTS products (
             product_id INT IDENTITY(0,1) PRIMARY KEY NOT NULL,
-            product_size sizes,
+            product_size VARCHAR(150) NOT NULL,
             product_name VARCHAR(150) NOT NULL,
             product_price FLOAT NOT NULL
             )
@@ -43,17 +44,17 @@ def create_table():
         """)
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS transaction (
-            transaction_id INT IDENTITY(0,1) PRIMARY KEY NOT NULL,
+			transaction_id VARCHAR(36) NOT NULL,
             transaction_date DATE,
-            transaction_time TIME(100),
+            transaction_time TIME,
             location_id INT,
             transaction_total FLOAT,
             CONSTRAINT fk_location FOREIGN KEY(location_id) REFERENCES location(location_id)
-            )
+            );
         """)
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS basket (
-            transaction_id INT,
+            transaction_id VARCHAR(36),
             product_id INT,
             CONSTRAINT fk_products FOREIGN KEY(product_id) REFERENCES products(product_id),
             CONSTRAINT fk_transaction FOREIGN KEY(transaction_id) REFERENCES transaction(transaction_id)
@@ -68,7 +69,7 @@ def add_product_to_database(new_list):
             product_name = v[0]
             product_price = v[1]
             product_size = v[2]
-            sql = "INSERT INTO products (product_size, product_name, product_price) VALUES (%s, %s, %s) RETURNING product_id"
+            sql = "INSERT INTO products (product_size, product_name, product_price) VALUES (%s, %s, %s)"
             val = (product_size, product_name, product_price)
             cursor.execute(sql, val)
             connection.commit()
@@ -111,17 +112,20 @@ def add_transaction_to_database(new_list):
         # print('***',location_list)
         # newest_list = list(set((order['date'], order['time']) for order in new_list))
         for v in new_list:
+            uuid_id = str(uuid4())
+            print(uuid_id)
             location = v['location']
             time = v['time']
             date = v['date']
             total = v['total']
-            sql = "INSERT INTO transaction (location_id, transaction_date, transaction_time, transaction_total) VALUES (%s, %s, %s, %s) RETURNING transaction_id"
-            val = ( location, date, time, total )
+            sql = "INSERT INTO transaction (transaction_id, location_id, transaction_date, transaction_time, transaction_total) VALUES (%s, %s, %s, %s, %s)"
+            val = (uuid_id, location, date, time, total )
+            print(val)
             cursor.execute(sql, val)
             connection.commit()
-            id = cursor.fetchall()
-            print(id)
-            v['transaction_id'] = id[0][0]
+            # id = cursor.fetchall()
+            # print(id)
+            v['transaction_id'] = uuid_id
         return new_list
 
 
@@ -137,6 +141,7 @@ def get_product_by_name(name):
 
 def add_basket_to_database(new_list):
     with connection.cursor() as cursor:
+        
         for transaction in new_list:
             for orders in transaction['order']:
                 transaction_id = transaction['transaction_id'] 
