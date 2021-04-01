@@ -1,5 +1,8 @@
 {
-    "python.pythonPath": "C:\\Python39\\python.exe",
-    "yaml.customTags": ["!Ref PythonRequirementsLambdaLayer"]
+    "python.pythonPath": "/usr/bin/python3",
+    "yaml.customTags": [
+        "!Ref PythonRequirementsLambdaLayer"
+    ],
+    "python.linting.enabled": true
 
 }

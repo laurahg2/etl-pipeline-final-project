@@ -1,8 +1,9 @@
-import psycopg2 as ps
+# import psycopg2 as ps
 # from dotenv import load_dotenv
 # import os
 from src.handler import connection
 from uuid import uuid4
+
 # load_dotenv()
 # dbname = os.environ["db"]
 # host = os.environ["host"]
