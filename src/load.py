@@ -1,9 +1,8 @@
-# import psycopg2 as ps
+import psycopg2 as ps
 # from dotenv import load_dotenv
 # import os
 from src.handler import connection
 from uuid import uuid4
-
 # load_dotenv()
 # dbname = os.environ["db"]
 # host = os.environ["host"]
@@ -31,7 +30,7 @@ def create_table():
     #     """)
     cursor.execute(
         """ CREATE TABLE IF NOT EXISTS products (
-            product_id INT IDENTITY(0,1) PRIMARY KEY NOT NULL,
+            product_id INT IDENTITY PRIMARY KEY NOT NULL,
             product_size VARCHAR(150) NOT NULL,
             product_name VARCHAR(150) NOT NULL,
             product_price FLOAT NOT NULL
@@ -39,26 +38,22 @@ def create_table():
         """)
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS location(
-            location_id INT IDENTITY(0,1) PRIMARY KEY NOT NULL,
+            location_id INT IDENTITY PRIMARY KEY NOT NULL,
             location_name VARCHAR(150) NOT NULL
             )
         """)
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS transaction (
-			transaction_id VARCHAR(36) NOT NULL,
-            transaction_date DATE,
-            transaction_time TIME,
-            location_id INT,
-            transaction_total FLOAT,
-            CONSTRAINT fk_location FOREIGN KEY(location_id) REFERENCES location(location_id)
-            );
+			transaction_id VARCHAR(36) PRIMARY KEY NOT NULL,
+            transaction_date TIMESTAMP,
+            location_id INT REFERENCES location,
+            transaction_total FLOAT
+            )
         """)
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS basket (
-            transaction_id VARCHAR(36),
-            product_id INT,
-            CONSTRAINT fk_products FOREIGN KEY(product_id) REFERENCES products(product_id),
-            CONSTRAINT fk_transaction FOREIGN KEY(transaction_id) REFERENCES transaction(transaction_id)
+            transaction_id VARCHAR(36) REFERENCES transaction,
+            product_id INT REFERENCES products
             )
         """)
     connection.commit()
@@ -116,11 +111,11 @@ def add_transaction_to_database(new_list):
             uuid_id = str(uuid4())
             print(uuid_id)
             location = v['location']
-            time = v['time']
+            # time = v['time']
             date = v['date']
             total = v['total']
-            sql = "INSERT INTO transaction (transaction_id, location_id, transaction_date, transaction_time, transaction_total) VALUES (%s, %s, %s, %s, %s)"
-            val = (uuid_id, location, date, time, total )
+            sql = "INSERT INTO transaction (transaction_id, location_id, transaction_date, transaction_total) VALUES (%s, %s, %s, %s)"
+            val = (uuid_id, location, date, total)
             print(val)
             cursor.execute(sql, val)
             connection.commit()

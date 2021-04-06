@@ -2,12 +2,12 @@ def clear_orders(orders_list):
     for order in orders_list:
         for key, value in order.items():
             if key == 'order':
-                products = str(value)
+                products = value
                 if products[0] == ",":
                     products = products[1:]
                 if "Large," in products:
                     products = products.replace("Large,", "Large-")
-                if "Large "in products:
+                if "Large " in products:
                     products = products.replace("Large ", "Large-")
                 if "Regular," in products:
                     products = products.replace("Regular,", "Regular-")
@@ -28,7 +28,6 @@ def clear_orders(orders_list):
 #                 products = value
 #                 number = products.count(",")
 #                 product_data = products.split(",", number)
-#                 print(product_data)
 #                 n = 0
 #                 while n in range(number):
 #                     product_name = product_data[n]
@@ -37,9 +36,7 @@ def clear_orders(orders_list):
 
 #                     if "Large-" in product_name:
 #                         size = product_name[:5]
-#                         print(size)
 #                         name = product_name[6:]
-#                         print(name)
 #                         dictionary = {
 #                             "product_name": name,
 #                             "product_price": product_price,
@@ -98,7 +95,7 @@ def transform_data(orders_list):
                         }
                     list_order.append(dictionary)
         transaction['order'] = list_order
-    return orders_list                
+    return orders_list 
 
 # def extract_unique_names(orders_list):
 #     duplicates_removed = []

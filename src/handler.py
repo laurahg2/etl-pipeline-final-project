@@ -5,6 +5,7 @@ import psycopg2 as ps
 import os
 from dotenv import load_dotenv
 
+
 load_dotenv()
 dbname = os.environ["db"]
 host = os.environ["host"]
@@ -32,25 +33,30 @@ def handle(event, context):
     s3_object = s3.get_object(Bucket = bucket, Key = key)
     data = s3_object['Body'].read().decode('utf-8')
     all_lines = []
-    # extract.read_csv()
+    
     # read CSV
- 
+
     # csv_data = csv.reader(data.splitlines())
     # for row in csv_data:
-    #     date = str(row[0][0:10])
-    #     time = str(row[0][-8:])
+    #     datestr = row[0]     #.replace('/', '-')
+    #     # print(datestr)
+    #     date_obj = datetime.strptime(datestr, '%d/%m/%Y %H:%M')
+    #     # print(date_obj)
+    #     # time = str(row[0][-5:])
     #     location = str(row[1])
     #     order = str(row[3])
-    #     total = str(row[5])
-    #     all_lines.append({'date':date, 'time':time, 'location':location, 'order':order, 'total':total})
+    #     total = str(row[4])
+    #     all_lines.append({'date':date_obj, 'location':location, 'order':order, 'total':total})
     # return cached_list
     # print(all_lines)
     app.start_app(all_lines, data)
     
-    # Form all the lines of data into a list of lists
     print_all_lines = [print(line) for line in all_lines]
     print_all_lines
     
     return {"message": "success!!! Check the cloud watch logs for this lambda in cloudwatch https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logsV2:log-groups"}
     
-
+    # Form all the lines of data into a list of lists
+    # all_lines = [line for line in csv_data]
+    # print(data)
+    # print(all_lines)
