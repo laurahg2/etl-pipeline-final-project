@@ -32,8 +32,8 @@ custom:
 frameworkVersion: '2'
 
 provider:
-  role:
-    permissionsBoundary: arn:aws:iam::505617246107:policy/ScopePermissions
+  # role:
+  #   permissionsBoundary: arn:aws:iam::505617246107:policy/ScopePermissions
 
   name: aws
   runtime: python3.7
@@ -61,14 +61,14 @@ package:
 functions:
   team5:
     handler: src/handler.handle
-    timeout: 10
+    timeout: 300
     layers:
       - !Ref PythonRequirementsLambdaLayer
     events:
       - s3:
-          bucket: team5-final-project
+          bucket: delon2-team-5-cafe-transactions
           event: s3:ObjectCreated:*
-          existing: true
+          # existing: true
           rules:
             - suffix: .csv
     # iamRoleStatements:
@@ -81,12 +81,12 @@ functions:
     #       - arn:aws:s3:::my-bucket/*
 
 # you can add CloudFormation resource templates here
-resources:
-  Resources:
-    IamRoleCustomResourcesLambdaExecution:
-      Type: AWS::IAM::Role
-      Properties:
-        PermissionsBoundary: arn:aws:iam::505617246107:policy/ScopePermissions
+# resources:
+#   Resources:
+#     IamRoleCustomResourcesLambdaExecution:
+#       Type: AWS::IAM::Role
+#       Properties:
+#         PermissionsBoundary: arn:aws:iam::505617246107:policy/ScopePermissions
 #  Outputs:
 #     NewOutput:
 #       Description: "Description for the output"

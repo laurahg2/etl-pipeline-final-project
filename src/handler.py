@@ -5,6 +5,7 @@ import psycopg2 as ps
 import os
 from dotenv import load_dotenv
 
+
 load_dotenv()
 dbname = os.environ["db"]
 host = os.environ["host"]
@@ -34,26 +35,21 @@ def handle(event, context):
     all_lines = []
     
     # read CSV
-    # fieldnames = ['date', 'location', 'full_name', 'order', 'payment_type', 'total', 'card_details']
-    # csv_data = csv.DictReader(data, delimiter = ',', fieldnames=fieldnames)
+
+    # csv_data = csv.reader(data.splitlines())
     # for row in csv_data:
-    #     date = str(row['date'][0:10])
-    #     time = str(row['date'][-8:])
-    #     location = str(row['location'])
-    #     order = str(row['order'])
-    #     total = str(row['total'])
-    #     all_lines.append({'date':date, 'time':time, 'location':location, 'order':order, 'total':total})
-    csv_data = csv.reader(data.splitlines())
-    for row in csv_data:
-        date = str(row[0][0:10])
-        time = str(row[0][-8:])
-        location = str(row[1])
-        order = str(row[3])
-        total = str(row[5])
-        all_lines.append({'date':date, 'time':time, 'location':location, 'order':order, 'total':total})
+    #     datestr = row[0]     #.replace('/', '-')
+    #     # print(datestr)
+    #     date_obj = datetime.strptime(datestr, '%d/%m/%Y %H:%M')
+    #     # print(date_obj)
+    #     # time = str(row[0][-5:])
+    #     location = str(row[1])
+    #     order = str(row[3])
+    #     total = str(row[4])
+    #     all_lines.append({'date':date_obj, 'location':location, 'order':order, 'total':total})
     # return cached_list
     # print(all_lines)
-    app.start_app(all_lines)
+    app.start_app(all_lines, data)
     
     print_all_lines = [print(line) for line in all_lines]
     print_all_lines
@@ -64,5 +60,3 @@ def handle(event, context):
     # all_lines = [line for line in csv_data]
     # print(data)
     # print(all_lines)
-    
-
