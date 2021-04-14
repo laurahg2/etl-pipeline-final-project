@@ -46,14 +46,17 @@ def create_table():
         """CREATE TABLE IF NOT EXISTS transaction (
 			transaction_id VARCHAR(36) PRIMARY KEY NOT NULL,
             transaction_date TIMESTAMP,
-            location_id INT REFERENCES location,
-            transaction_total FLOAT
+            location_id INT,
+            transaction_total FLOAT,
+            foreign key(location_id) REFERENCES location(location_id)
             )
         """)
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS basket (
-            transaction_id VARCHAR(36) REFERENCES transaction,
-            product_id INT REFERENCES products
+            transaction_id VARCHAR(36),
+            product_id INT,
+            foreign key(transaction_id) REFERENCES transaction(transaction_id),
+            foreign key(product_id) REFERENCES products(product_id)
             )
         """)
     connection.commit()
@@ -65,9 +68,9 @@ def add_product_to_database(new_list):
             product_name = v[0]
             product_price = v[1]
             product_size = v[2]
-            sql = "INSERT INTO products (product_size, product_name, product_price) VALUES (%s, %s, %s)"
-            val = (product_size, product_name, product_price)
-            cursor.execute(sql, val)
+            sql = (f"INSERT INTO products (product_size, product_name, product_price) SELECT '{product_size}', '{product_name}', '{product_price}' WHERE NOT EXISTS ( SELECT product_id FROM products WHERE product_size = '{product_size}' AND product_name = '{product_name}' AND product_price = '{product_price}' )")
+            # val = (product_size, product_name, product_price)
+            cursor.execute(sql)
             connection.commit()
         #     id = cursor.fetchall()
         #     print(id)
@@ -79,9 +82,9 @@ def add_location_to_database(new_list):
         newest_list = list(set((item['location']) for item in new_list))
         for v in newest_list:
             location_name = v
-            sql = ("INSERT INTO location (location_name) VALUES (%s)")
-            val = (location_name)
-            cursor.execute(sql, [val])
+            sql = (f"INSERT INTO location (location_name) SELECT '{location_name}' WHERE NOT EXISTS ( SELECT location_id FROM location WHERE location_name = '{location_name}' )")
+            # val = (location_name)
+            cursor.execute(sql)
             connection.commit()
 
 def add_transaction_to_database(new_list):
